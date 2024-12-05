@@ -22,7 +22,7 @@ def setup_rbac_system():
     # Initialize Pinecone vector store
     pinecone_api_key = os.getenv('PINECONE_API_KEY')
     pinecone_environment = os.getenv('PINECONE_ENVIRONMENT')
-    pinecone_index_name = 'rbac-rag-index'
+    pinecone_index_name = 'test-rag-rbac-0'
 
     vector_store = PineconeVectorStore(
         api_key=pinecone_api_key,
