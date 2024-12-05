@@ -3,8 +3,9 @@ class SemanticDatabase(metaclass=type):
     Manages semantic operations using the vector store.
     """
 
-    def __init__(self, vector_store):
+    def __init__(self, vector_store, similarity_threshold=0.85):
         self.vector_store = vector_store
+        self.similarity_threshold = similarity_threshold
 
     def get_embedding(self, data):
         return self.vector_store.embed(data)
@@ -17,6 +18,10 @@ class SemanticDatabase(metaclass=type):
 
     def query_similar(self, embedding, top_k=1):
         matches = self.vector_store.query(embedding, top_k)
-        # Convert matches to a list of dictionaries
-        return [{'id': match.id, 'score': match.score} for match in matches]
+        # Filter matches based on similarity threshold
+        filtered_matches = [
+            {'id': match.id, 'score': match.score}
+            for match in matches if match.score >= self.similarity_threshold
+        ]
+        return filtered_matches
     
