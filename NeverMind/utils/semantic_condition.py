@@ -4,32 +4,28 @@ from NeverMind.utils.conditions import Condition
 class SemanticCondition(Condition):
     """
     Condition that evaluates based on semantic similarity.
+    When inverse=False (default): Returns True if similarity >= threshold
+    When inverse=True: Returns True if similarity < threshold
     """
 
     def __init__(self, term, threshold=0.8, inverse=False):
         self.term = term
         self.threshold = threshold
         self.inverse = inverse
-        self.term_embedding_id = f"term_{self.term}"
+        self.term_embedding = None
 
     def evaluate(self, user, entity, database):
-        # Ensure the term embedding is stored
-        if not hasattr(self, 'term_embedding'):
+        # Get or create term embedding
+        if self.term_embedding is None:
             self.term_embedding = database.get_embedding(self.term)
-            database.store_embedding(self.term_embedding_id, self.term_embedding)
 
-        # Generate embedding for the entity data
+        # Get entity embedding
         entity_embedding = database.get_embedding(entity.data)
 
-        # Compute similarity directly
+        # Calculate similarity
         similarity = database.compute_similarity(self.term_embedding, entity_embedding)
 
-        # Print the similarity for debugging
-        print(f"Similarity between '{self.term}' and '{entity.data}': {similarity}")
-
-        # Check if the similarity meets the threshold
-        if self.inverse:
-            return similarity < self.threshold
-        else:
-            return similarity >= self.threshold
+        # For inverse conditions, return True when similarity is below threshold
+        # For regular conditions, return True when similarity is above threshold
+        return similarity < self.threshold if self.inverse else similarity >= self.threshold
     

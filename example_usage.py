@@ -37,27 +37,27 @@ def setup_rbac_system():
 
     # Create Roles
     cat_lover_role = Role(role_id=1, name='Cat Lover')
-    dog_lover_role = Role(role_id=2, name='Dog Lover')
+    everything_except_cats_role = Role(role_id=2, name='Everything Except Cats')
 
     # Create Permissions
     cat_permission = Permission(permission_id=1, name='Access Cat Content')
-    dog_permission = Permission(permission_id=2, name='Access Dog Content')
+    all_except_cats_permission = Permission(permission_id=2, name='Access All Except Cats')
 
     # Define Conditions
     cat_condition = SemanticCondition(term='cat', threshold=0.78)
-    dog_condition = SemanticCondition(term='dog', threshold=0.78)
+    inverse_cat_condition = SemanticCondition(term='cat', threshold=0.78, inverse=True)
 
     # Assign Conditions to Permissions
     cat_permission.add_condition(cat_condition)
-    dog_permission.add_condition(dog_condition)
+    all_except_cats_permission.add_condition(inverse_cat_condition)
 
     # Assign Permissions to Roles
     cat_lover_role.add_permission(cat_permission)
-    dog_lover_role.add_permission(dog_permission)
+    everything_except_cats_role.add_permission(all_except_cats_permission)
 
     # Assign Roles to Users
     alice.add_role(cat_lover_role)
-    bob.add_role(dog_lover_role)
+    bob.add_role(everything_except_cats_role)
 
     # Create Entities (Documents)
     entities = [
@@ -79,8 +79,24 @@ def setup_rbac_system():
     # Initialize Access Control Policy
     policy = AccessControlPolicy(database=semantic_db)
 
+    # Create a permission that blocks sensitive content
+    safe_permission = Permission(1, "Safe Content Only")
+
+    # Add inverse conditions to block sensitive content
+    safe_permission.add_condition(SemanticCondition("violent", threshold=0.7, inverse=True))
+    safe_permission.add_condition(SemanticCondition("adult", threshold=0.7, inverse=True))
+    safe_permission.add_condition(SemanticCondition("sensitive", threshold=0.7, inverse=True))
+
+    # Create a role and assign the permission
+    safe_role = Role(1, "Safe Content Viewer")
+    safe_role.add_permission(safe_permission)
+
+    # Assign the role to a user
+    safe_user = User(1, "Safe User")
+    safe_user.add_role(safe_role)
+
     return {
-        'users': [alice, bob],
+        'users': [alice, bob, safe_user],
         'entities': entities,
         'policy': policy,
         'semantic_db': semantic_db
@@ -135,22 +151,19 @@ def main():
     policy = system['policy']
     semantic_db = system['semantic_db']
 
-    # Simulate RAG requests
+    # Test requests
     user_requests = [
-        ("Alice", "Show me pictures of cats."),
-        ("Bob", "How do I train my dog?"),
-        ("Alice", "What are some popular cat breeds?"),
-        ("Bob", "Tips for caring for puppies."),
-        ("Alice", "Information on dog obedience classes."),
-        ("Bob", "How to stop my cat from scratching furniture."),
+        ("Bob", "Show me dog training tips"),  # Should be ALLOWED
+        ("Bob", "Tell me about a killer running in the park"),         # Should be ALLOWED
+        ("Bob", "How to train cats"),       # Should be ALLOWED
+        ("Alice", "Show me cat breeds"),       # Should be ALLOWED
+        ("Alice", "Dog training tips"),        # Should be DENIED
     ]
 
-    # Create a mapping of user names to User objects
-    user_mapping = {user.name: user for user in users}
+    for user_name, request in user_requests:
+        user = next(u for u in users if u.name == user_name)
+        simulate_rag_request(user, request, policy, semantic_db)
 
-    for user_name, request_text in user_requests:
-        user = user_mapping[user_name]
-        simulate_rag_request(user, request_text, policy, semantic_db)
 
 if __name__ == '__main__':
     main()
