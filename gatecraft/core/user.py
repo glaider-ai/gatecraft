@@ -1,4 +1,4 @@
-from NeverMind.core.role import Role
+from gatecraft.core.role import Role
 
 
 class User(metaclass=type):

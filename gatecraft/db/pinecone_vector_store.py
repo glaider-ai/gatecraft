@@ -1,7 +1,7 @@
 import pinecone
 import openai
 import numpy as np
-from NeverMind.db.vector_store_interface import VectorStoreInterface
+from gatecraft.db.vector_store_interface import VectorStoreInterface
 
 
 class PineconeVectorStore(VectorStoreInterface):

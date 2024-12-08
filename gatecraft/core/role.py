@@ -1,4 +1,4 @@
-from NeverMind.core.permission import Permission
+from gatecraft.core.permission import Permission
 
 
 class Role(metaclass=type):

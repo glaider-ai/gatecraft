@@ -1,4 +1,4 @@
-from NeverMind.utils.conditions import Condition
+from gatecraft.utils.conditions import Condition
 
 
 class SemanticCondition(Condition):

@@ -1,12 +1,12 @@
 import os
-from NeverMind.core.user import User
-from NeverMind.core.role import Role
-from NeverMind.core.permission import Permission
-from NeverMind.utils.semantic_condition import SemanticCondition
-from NeverMind.core.entity import Entity
-from NeverMind.core.policy import AccessControlPolicy
-from NeverMind.db.semantic_database import SemanticDatabase
-from NeverMind.db.pinecone_vector_store import PineconeVectorStore
+from gatecraft.core.user import User
+from gatecraft.core.role import Role
+from gatecraft.core.permission import Permission
+from gatecraft.utils.semantic_condition import SemanticCondition
+from gatecraft.core.entity import Entity
+from gatecraft.core.policy import AccessControlPolicy
+from gatecraft.db.semantic_database import SemanticDatabase
+from gatecraft.db.pinecone_vector_store import PineconeVectorStore
 import openai
 from dotenv import load_dotenv
 

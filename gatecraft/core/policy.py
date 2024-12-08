@@ -1,6 +1,6 @@
-from NeverMind.core.user import User
-from NeverMind.core.entity import Entity
-from NeverMind.db.semantic_database import SemanticDatabase
+from gatecraft.core.user import User
+from gatecraft.core.entity import Entity
+from gatecraft.db.semantic_database import SemanticDatabase
 
 
 class AccessControlPolicy(metaclass=type):

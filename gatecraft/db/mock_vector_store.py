@@ -1,4 +1,4 @@
-from NeverMind.db.vector_store_interface import VectorStoreInterface
+from gatecraft.db.vector_store_interface import VectorStoreInterface
 import numpy as np
 
 
