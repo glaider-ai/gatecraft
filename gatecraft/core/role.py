@@ -1,4 +1,3 @@
-from gatecraft.core.permission import Permission
 
 
 class Role(metaclass=type):
@@ -9,16 +8,11 @@ class Role(metaclass=type):
     def __init__(self, role_id, name):
         self.role_id = role_id
         self.name = name
-        self.permissions = set()
+        self.conditions = []
 
-    def add_permission(self, permission):
-        if not isinstance(permission, Permission):
-            raise TypeError("Expected a Permission instance.")
-        self.permissions.add(permission)
+    def add_condition(self, condition):
+        self.conditions.append(condition)
 
-    def remove_permission(self, permission):
-        self.permissions.discard(permission)
-
-    def get_permissions(self):
-        return self.permissions 
+    def get_conditions(self):
+        return self.conditions 
     

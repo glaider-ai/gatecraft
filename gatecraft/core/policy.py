@@ -3,31 +3,27 @@ from gatecraft.core.entity import Entity
 from gatecraft.db.semantic_database import SemanticDatabase
 
 
-class AccessControlPolicy(metaclass=type):
+class AccessControlPolicy:
     """
     Implements the access control policy logic.
     """
 
-    def __init__(self, database: SemanticDatabase):
+    def __init__(self, database):
         self.database = database
 
-    def is_access_allowed(self, user: User, entity: Entity) -> bool:
+    def is_access_allowed(self, user, entity):
         """
         Determines if a user has access to an entity.
         Returns True if:
         1. At least one regular condition matches OR
         2. All inverse conditions match
         """
-        user_permissions = set()
         for role in user.get_roles():
-            user_permissions.update(role.get_permissions())
-
-        for permission in user_permissions:
             regular_conditions = []
             inverse_conditions = []
             
             # Separate regular and inverse conditions
-            for condition in permission.get_conditions():
+            for condition in role.get_conditions():
                 if condition.inverse:
                     inverse_conditions.append(condition)
                 else:
@@ -44,6 +40,5 @@ class AccessControlPolicy(metaclass=type):
                 if all(condition.evaluate(user, entity, self.database) 
                       for condition in inverse_conditions):
                     return True
-                
-        return False 
-    
+                    
+        return False
