@@ -62,3 +62,19 @@ class Gatecraft:
 
     def add_condition_to_role(self, role, condition):
         role.add_condition(condition) 
+
+    def retrieve_entities(self, query, top_k=1):
+        # Get the embedding for the query
+        query_embedding = self.semantic_db.get_embedding(query)
+        
+        # Query the vector store for similar entities
+        matches = self.semantic_db.query_similar(query_embedding, top_k=top_k)
+        
+        # Retrieve the matching entities
+        entities = []
+        for match in matches:
+            entity_id = int(match['id'].replace('entity_', ''))
+            entity = self.entities.get(entity_id)
+            if entity:
+                entities.append(entity)
+        return entities

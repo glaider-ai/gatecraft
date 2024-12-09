@@ -23,14 +23,50 @@ def main():
     gc.assign_role(bob, everything_except_cats_role)
 
     # Add entities (documents)
-    gc.add_entity(entity_id=1, data='Cute kitten playing with a ball of yarn.')
-    gc.add_entity(entity_id=2, data='Dog training and obedience tips.')
+    gc.add_entity(entity_id=1, data='Breeds of cats and their characteristics.')      # Cat content
+    gc.add_entity(entity_id=2, data='Tips on dog training and obedience.')            # Dog content
+    gc.add_entity(entity_id=3, data='Man running in the park.')                    # Violent content
+    gc.add_entity(entity_id=4, data='How to train cats effectively.')                 # Cat content
 
-    # Check access
-    print(f"Alice access to Entity 1: {gc.is_access_allowed(alice, 1)}")  # Should be True
-    print(f"Alice access to Entity 2: {gc.is_access_allowed(alice, 2)}")  # Should be False
-    print(f"Bob access to Entity 1: {gc.is_access_allowed(bob, 1)}")      # Should be False
-    print(f"Bob access to Entity 2: {gc.is_access_allowed(bob, 2)}")      # Should be True
+    # Simulate user requests
+    requests = [
+        {'user': bob, 'query': 'Show me dog training tips'},
+        {'user': bob, 'query': 'Tell me about a man running in the park'},
+        {'user': bob, 'query': 'How to train cats'},
+        {'user': alice, 'query': 'Show me dog breeds'},
+        {'user': alice, 'query': 'Dog training tips'},
+    ]
+
+    for req in requests:
+        user = req['user']
+        query = req['query']
+        print(f"\nUser '{user.name}' is making a request: '{query}'")
+
+        # Simulate retrieval of relevant entities
+        relevant_entities = gc.retrieve_entities(query)
+
+        if not relevant_entities:
+            print("No relevant documents found for the query.")
+            continue
+
+        # Check access for each retrieved entity
+        access_allowed = False
+        accessible_entities = []
+
+        for entity in relevant_entities:
+            if gc.is_access_allowed(user, entity.entity_id):
+                access_allowed = True
+                accessible_entities.append(entity)
+
+        print(f"Access Status: {'ALLOWED' if access_allowed else 'DENIED'}")
+
+        if access_allowed:
+            print("Proceeding with Retrieval-Augmented Generation...")
+            print("Retrieved Documents to be sent to LLM:")
+            for idx, entity in enumerate(accessible_entities, start=1):
+                print(f"Document {entity.entity_id}: {entity.data}")
+        else:
+            print("Access denied. Cannot proceed with the request.")
 
 
 if __name__ == '__main__':

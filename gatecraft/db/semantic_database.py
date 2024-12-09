@@ -18,10 +18,10 @@ class SemanticDatabase(metaclass=type):
 
     def query_similar(self, embedding, top_k=1):
         matches = self.vector_store.query(embedding, top_k)
-        # Filter matches based on similarity threshold
+        # Adjusted to work with the vector store's response format
         filtered_matches = [
-            {'id': match.id, 'score': match.score}
-            for match in matches if match.score >= self.similarity_threshold
+            {'id': match['id'], 'score': match['score']}
+            for match in matches if match['score'] >= self.similarity_threshold
         ]
         return filtered_matches
     
