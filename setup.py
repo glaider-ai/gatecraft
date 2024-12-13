@@ -5,9 +5,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="gatecraft",
-    version="0.1.0",
+    version="0.1.1",
     author="Lorenzo Abati",
-    author_email="lorenzo.abati@glaider.it",
+    author_email="lorenzo@glaidersecurity.com",
     description="A semantic RBAC system with RAG capabilities",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -31,4 +31,4 @@ setup(
         "numpy>=1.21.0",
         "python-dotenv>=0.19.0",
     ],
-) 
+)
