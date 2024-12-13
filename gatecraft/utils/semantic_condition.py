@@ -25,6 +25,9 @@ class SemanticCondition(Condition):
         # Calculate similarity
         similarity = database.compute_similarity(self.term_embedding, entity_embedding)
 
+        print(similarity)
+        print(similarity < self.threshold if self.inverse else similarity >= self.threshold)
+
         # For inverse conditions, return True when similarity is below threshold
         # For regular conditions, return True when similarity is above threshold
         return similarity < self.threshold if self.inverse else similarity >= self.threshold

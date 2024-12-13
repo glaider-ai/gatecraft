@@ -22,7 +22,7 @@ class PineconeVectorStore(VectorStoreInterface):
             # Create a new index if it doesn't exist
             self.pinecone_client.create_index(
                 name=self.index_name,
-                dimension=1536,  # OpenAI's embedding dimension is 1536
+                dimension=3072,  # OpenAI's text-embedding-3-large dimension is 3072
                 metric='cosine',
                 spec=pinecone.ServerlessSpec(
                     cloud='aws',
@@ -35,7 +35,7 @@ class PineconeVectorStore(VectorStoreInterface):
         # Generate embeddings using OpenAI
         response = openai.Embedding.create(
             input=[data],
-            engine='text-embedding-ada-002'
+            model='text-embedding-3-large'
         )
         embedding = response['data'][0]['embedding']
         return np.array(embedding)

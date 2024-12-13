@@ -3,7 +3,7 @@ from gatecraft import Gatecraft, SemanticCondition
 
 def main():
     # Initialize the Gatecraft system
-    gc = Gatecraft()
+    gc = Gatecraft(similarity_threshold=0.20)
 
     # Create users
     alice = gc.create_user(user_id=1, name='Alice')
@@ -23,17 +23,17 @@ def main():
     gc.assign_role(bob, everything_except_cats_role)
 
     # Add entities (documents)
-    gc.add_entity(entity_id=1, data='Breeds of cats and their characteristics.')      # Cat content
-    gc.add_entity(entity_id=2, data='Tips on dog training and obedience.')            # Dog content
-    gc.add_entity(entity_id=3, data='Man running in the park.')                    # Violent content
-    gc.add_entity(entity_id=4, data='How to train cats effectively.')                 # Cat content
+    gc.add_entity(entity_id=1, data='Breeds of cats and their characteristics.')
+    gc.add_entity(entity_id=2, data='How to shower yourself')
+    gc.add_entity(entity_id=3, data='Man running in the park.')
+    gc.add_entity(entity_id=4, data='How to train cats effectively.')
 
     # Simulate user requests
     requests = [
         {'user': bob, 'query': 'Show me dog training tips'},
         {'user': bob, 'query': 'Tell me about a man running in the park'},
-        {'user': bob, 'query': 'How to train cats'},
-        {'user': alice, 'query': 'Show me dog breeds'},
+        {'user': bob, 'query': 'How to train dogs'},
+        {'user': alice, 'query': 'The agility of cats'},
         {'user': alice, 'query': 'Dog training tips'},
     ]
 
